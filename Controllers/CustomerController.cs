@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RecruitmentTask.Model;
+using RecruitmentTask.Service;
 
 namespace RecruitmentTask.Controllers
 {
@@ -12,22 +13,25 @@ namespace RecruitmentTask.Controllers
     [Route("api/[controller]")]
     public class CustomerController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<CustomerController> _logger;
+        private readonly ICustomerService _customerService;
 
-        public CustomerController(ILogger<CustomerController> logger)
+        public CustomerController(ILogger<CustomerController> logger, ICustomerService customerService)
         {
             _logger = logger;
+            _customerService = customerService;
         }
 
         [HttpGet]
-        public IEnumerable<Customer> Get()
+        public IEnumerable<Customer> GetAll()
         {
-            return null;
+            return _customerService.GetCustomers();
+        }
+
+        [HttpGet]
+        public IEnumerable<Customer> GetCustomer(int id)
+        {
+            return _customerService.GetCustomers().Where(x => x.Id == id);
         }
 
         [HttpPost(nameof(InsertCustomer))]  
